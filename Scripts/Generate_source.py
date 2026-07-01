@@ -232,3 +232,69 @@ np.save(OUTPUT_DIR / "figure1f_x_values_contact.npy", x_values_contact)
 df.to_csv(OUTPUT_DIR / "figure1f_genomic_loci.csv", index=False)
 
 print(f"✅ Light source data saved in {OUTPUT_DIR}")
+
+#%%
+
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Extraction script for Figure 2c, 2d, 2e - OK107 vs not_OK107
+"""
+
+from pathlib import Path
+import numpy as np
+import sys
+
+# ====================== PATHS ======================
+SCRIPT_DIR = Path(__file__).resolve().parent
+REPO_ROOT  = SCRIPT_DIR.parent
+INPUT_DATA = REPO_ROOT / "/home/olivier/Desktop/Marion_project/Paper_figures_marion/Version_X_Lausanne/Source_data/Figure_2/Source_data/"
+OUTPUT_DIR = REPO_ROOT / "Source_light"
+
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+# ===================================================
+
+sys.path.append(str(SCRIPT_DIR))
+from Function_Messina_et_al import PWD_to_Contact, VolcanoplotHiM
+
+print("Loading data for Figure 2c/d/e...")
+
+# Load raw matrices
+m1 = np.load(INPUT_DATA / 'Traces_combined_all_traces_KC_G_split_LEAR_Matrix_PWDscMatrix.npy')
+m2 = np.load(INPUT_DATA / 'Traces_combined_all_traces_KC_AB_split_LEAR_Matrix_PWDscMatrix.npy')
+m3 = np.load(INPUT_DATA / 'Traces_combined_all_traces_KC_ABp_split_LEAR_Matrix_PWDscMatrix.npy')
+m4 = np.load(INPUT_DATA / 'Traces_combined_all_traces_KC_all_split_LEAR_Matrix_PWDscMatrix.npy')
+m5 = np.load(INPUT_DATA / 'Traces_combined_all_traces_not_KC_new_split_imputed_LEAR_Matrix_PWDscMatrix.npy')
+
+Matrix_OK107 = np.concatenate([m1, m2, m3, m4], axis=2)
+Matrix_not_OK107 = m5
+
+# Compute contact + median
+Matrix_OK107_contact, _ = PWD_to_Contact(Matrix_OK107, 1000, 150)
+Matrix_not_OK107_contact, _ = PWD_to_Contact(Matrix_not_OK107, 1000, 150)
+
+Matrix_OK107_median = np.nanmedian(Matrix_OK107, axis=2)
+Matrix_not_OK107_median = np.nanmedian(Matrix_not_OK107, axis=2)
+
+# === Volcano plot: pre-compute differential + p-values ===
+print("Computing Volcano plot statistics...")
+differential_matrix, pvalues = VolcanoplotHiM(Matrix_OK107, Matrix_not_OK107)
+
+# ====================== SAVE LIGHT SOURCE DATA ======================
+np.save(OUTPUT_DIR / "figure2_OK107_contact.npy", Matrix_OK107_contact)
+np.save(OUTPUT_DIR / "figure2_notOK107_contact.npy", Matrix_not_OK107_contact)
+
+np.save(OUTPUT_DIR / "figure2_OK107_median.npy", Matrix_OK107_median)
+np.save(OUTPUT_DIR / "figure2_notOK107_median.npy", Matrix_not_OK107_median)
+
+# Lightest possible for volcano
+np.save(OUTPUT_DIR / "figure2_volcano_differential.npy", differential_matrix)
+np.save(OUTPUT_DIR / "figure2_volcano_pvalues.npy", pvalues)
+
+print(f"✅ Light source data saved to {OUTPUT_DIR}")
+print("Key files:")
+print("   • figure2_*_contact.npy")
+print("   • figure2_*_median.npy")
+print("   • figure2_volcano_differential.npy  ← very small")
+print("   • figure2_volcano_pvalues.npy")
