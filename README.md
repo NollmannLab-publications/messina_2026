@@ -28,7 +28,7 @@ cd messina_2026/Scripts
 
 ### 2. Example for ploting Figure 1 
 
-python plot_figure1.py
+python Figure_1.py
 
 ### 3. Citation
 
