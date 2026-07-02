@@ -245,56 +245,274 @@ Extraction script for Figure 2c, 2d, 2e - OK107 vs not_OK107
 from pathlib import Path
 import numpy as np
 import sys
+from scipy.stats import gaussian_kde
 
 # ====================== PATHS ======================
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT  = SCRIPT_DIR.parent
-INPUT_DATA = REPO_ROOT / "/home/olivier/Desktop/Marion_project/Paper_figures_marion/Version_X_Lausanne/Source_data/Figure_2/Source_data/"
+INPUT_DATA = REPO_ROOT / "//home/olivier/Desktop/Marion_project/Paper_figures_marion/Version_X_Lausanne/Source_data/Figure_1_supp/Source_data//"
 OUTPUT_DIR = REPO_ROOT / "Source_light"
 
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-# ===================================================
+
+print("Building light source for S1B histogram...")
+
+# Load all replicates
+
+# Load and combine
+files = [f for f in INPUT_DATA.glob("combined_all_labels*.npy")]
+matrices = [np.load(f) for f in files]
+Matrix = np.concatenate(matrices, axis=2)
+
+n = Matrix.shape[0]
+bins = np.arange(0, 2, 0.05)
+
+# Pre-compute KDE for every (i,j) pair
+kde_data = []
+
+for i in range(n):
+    row = []
+    for j in range(n):
+        data = Matrix[i, j, :]
+        data = data[np.isfinite(data)]
+        if len(data) > 5:  # minimum points for KDE
+            try:
+                kde = gaussian_kde(data, bw_method='silverman')
+                kde_vals = kde(bins)
+            except:
+                kde_vals = np.zeros_like(bins)
+        else:
+            kde_vals = np.zeros_like(bins)
+        row.append(kde_vals)
+    kde_data.append(row)
+
+kde_grid = np.array(kde_data)   # shape (n, n, len(bins))
+
+# N-matrix
+binary_matrix = np.where(np.isnan(Matrix), 0, 1)
+normalized_matrix = (np.sum(binary_matrix, axis=2) / binary_matrix.shape[2]) * 100
+np.fill_diagonal(normalized_matrix, 100)
+
+# Save light data
+np.save(OUTPUT_DIR / "S1b_N_matrix.npy", normalized_matrix.astype(np.float32))
+np.save(OUTPUT_DIR / "S1b_kde_grid.npy", kde_grid.astype(np.float32))
+np.save(OUTPUT_DIR / "S1b_bins.npy", bins.astype(np.float32))
+
+print(f"✅ Ready-to-plot data saved!")
+print(f"   N_matrix: {normalized_matrix.shape}")
+print(f"   KDE grid: {kde_grid.shape} → much smaller")
+#%% 
+
+
+from pathlib import Path
+import numpy as np
+import h5py
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+REPO_ROOT  = SCRIPT_DIR.parent
+INPUT_DATA = "/home/olivier/Desktop/Marion_project/Paper_figures_marion/Version_X_Lausanne/Source_data/Figure_3/Source_data/"
+OUTPUT_DIR = REPO_ROOT / "Source_light"
+
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+print("Creating single-file light source for Violin Plot...")
+
+# Load loom
+loom_path = INPUT_DATA + 'Davie_Janssens_Koldere_et_al_2018_AdultBrain.loom'
+with h5py.File(loom_path, 'r') as f:
+    matrix_data = f['matrix'][:]
+    cell_type = f['col_attrs']['cell_type'][:]
+    gene_names = f['row_attrs']['Gene'][:]
+
+cell_type_cleaned = np.array([str(ct, 'utf-8') if isinstance(ct, bytes) else str(ct) 
+                              for ct in cell_type])
+
+# Genes
+rut_idx = np.where(gene_names == b'rut')[0][0]
+act5c_idx = np.where(gene_names == b'Act5C')[0][0]
+
+rut = matrix_data[rut_idx, :]
+act5c = matrix_data[act5c_idx, :]
+
+ratio = rut / act5c
+ratio = np.where(np.isinf(ratio), np.nan, ratio)
+
+# Masks
+kc_G   = np.array(['G-KC' in ct for ct in cell_type_cleaned])
+kc_AB  = np.array(['A/B-KC' in ct for ct in cell_type_cleaned])
+kc_ABp = np.array(['A/B*-KC' in ct for ct in cell_type_cleaned])
+not_kc = ~(kc_G | kc_AB | kc_ABp)
+
+def remove_outliers(data, threshold=1.5):
+    if len(data) == 0:
+        return np.array([], dtype=np.float32)
+    q1 = np.percentile(data, 20)
+    q3 = np.percentile(data, 80)
+    iqr = q3 - q1
+    return data[(data >= q1 - threshold*iqr) & (data <= q3 + threshold*iqr)]
+
+# Cleaned data
+data_dict = {
+    'not_kc': remove_outliers(ratio[not_kc][~np.isnan(ratio[not_kc])]),
+    'kc_G':   remove_outliers(ratio[kc_G][~np.isnan(ratio[kc_G])]),
+    'kc_AB':  remove_outliers(ratio[kc_AB][~np.isnan(ratio[kc_AB])]),
+    'kc_ABp': remove_outliers(ratio[kc_ABp][~np.isnan(ratio[kc_ABp])])
+}
+
+# Save everything in ONE file
+np.savez(OUTPUT_DIR / "figure4a_violin_data.npz", **data_dict)
+
+print("✅ All violin data saved in one file:")
+print(f"   {OUTPUT_DIR / 'figure4a_violin_data.npz'}")
+for name, arr in data_dict.items():
+    print(f"   {name:>8}: {len(arr)} values")
+    
+    
+#%% 
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Light source for Figure 4 - KC subtypes contact maps
+"""
+
+from pathlib import Path
+import numpy as np
+import sys
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+REPO_ROOT  = SCRIPT_DIR.parent
+INPUT_DATA = "/home/olivier/Desktop/Marion_project/Paper_figures_marion/Version_X_Lausanne/Source_data/Figure_3/Source_data/"
+OUTPUT_DIR = REPO_ROOT / "Source_light"
+
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 sys.path.append(str(SCRIPT_DIR))
-from Function_Messina_et_al import PWD_to_Contact, VolcanoplotHiM
+from Function_Messina_et_al import PWD_to_Contact
 
-print("Loading data for Figure 2c/d/e...")
+print("Creating light source for KC subtypes contact maps...")
 
-# Load raw matrices
-m1 = np.load(INPUT_DATA / 'Traces_combined_all_traces_KC_G_split_LEAR_Matrix_PWDscMatrix.npy')
-m2 = np.load(INPUT_DATA / 'Traces_combined_all_traces_KC_AB_split_LEAR_Matrix_PWDscMatrix.npy')
-m3 = np.load(INPUT_DATA / 'Traces_combined_all_traces_KC_ABp_split_LEAR_Matrix_PWDscMatrix.npy')
-m4 = np.load(INPUT_DATA / 'Traces_combined_all_traces_KC_all_split_LEAR_Matrix_PWDscMatrix.npy')
-m5 = np.load(INPUT_DATA / 'Traces_combined_all_traces_not_KC_new_split_imputed_LEAR_Matrix_PWDscMatrix.npy')
+# Load the relevant matrices
+Matrix_KCs_G   = np.load(INPUT_DATA + 'Traces_combined_all_traces_KC_G_split_LEAR_Matrix_PWDscMatrix.npy')
+Matrix_KCs_AB  = np.load(INPUT_DATA + 'Traces_combined_all_traces_KC_AB_split_LEAR_Matrix_PWDscMatrix.npy')
+Matrix_KCs_ABp = np.load(INPUT_DATA + 'Traces_combined_all_traces_KC_ABp_split_LEAR_Matrix_PWDscMatrix.npy')
 
-Matrix_OK107 = np.concatenate([m1, m2, m3, m4], axis=2)
-Matrix_not_OK107 = m5
+print(f"G-KC shape:   {Matrix_KCs_G.shape}")
+print(f"AB-KC shape:  {Matrix_KCs_AB.shape}")
+print(f"ABp-KC shape: {Matrix_KCs_ABp.shape}")
 
-# Compute contact + median
-Matrix_OK107_contact, _ = PWD_to_Contact(Matrix_OK107, 1000, 150)
-Matrix_not_OK107_contact, _ = PWD_to_Contact(Matrix_not_OK107, 1000, 150)
+# Compute contact matrices
+Matrix_KCs_G_contact,   _ = PWD_to_Contact(Matrix_KCs_G,   1000, 150)
+Matrix_KCs_AB_contact,  _ = PWD_to_Contact(Matrix_KCs_AB,  1000, 150)
+Matrix_KCs_ABp_contact, _ = PWD_to_Contact(Matrix_KCs_ABp, 1000, 150)
 
-Matrix_OK107_median = np.nanmedian(Matrix_OK107, axis=2)
-Matrix_not_OK107_median = np.nanmedian(Matrix_not_OK107, axis=2)
+# Save in one file (clean)
+np.savez(OUTPUT_DIR / "figure4_kc_contact_maps.npz",
+         G_contact=Matrix_KCs_G_contact.astype(np.float32),
+         AB_contact=Matrix_KCs_AB_contact.astype(np.float32),
+         ABp_contact=Matrix_KCs_ABp_contact.astype(np.float32))
 
-# === Volcano plot: pre-compute differential + p-values ===
-print("Computing Volcano plot statistics...")
-differential_matrix, pvalues = VolcanoplotHiM(Matrix_OK107, Matrix_not_OK107)
+print(f"✅ Light source saved: figure4_kc_contact_maps.npz")
 
-# ====================== SAVE LIGHT SOURCE DATA ======================
-np.save(OUTPUT_DIR / "figure2_OK107_contact.npy", Matrix_OK107_contact)
-np.save(OUTPUT_DIR / "figure2_notOK107_contact.npy", Matrix_not_OK107_contact)
 
-np.save(OUTPUT_DIR / "figure2_OK107_median.npy", Matrix_OK107_median)
-np.save(OUTPUT_DIR / "figure2_notOK107_median.npy", Matrix_not_OK107_median)
+#%%
 
-# Lightest possible for volcano
-np.save(OUTPUT_DIR / "figure2_volcano_differential.npy", differential_matrix)
-np.save(OUTPUT_DIR / "figure2_volcano_pvalues.npy", pvalues)
 
-print(f"✅ Light source data saved to {OUTPUT_DIR}")
-print("Key files:")
-print("   • figure2_*_contact.npy")
-print("   • figure2_*_median.npy")
-print("   • figure2_volcano_differential.npy  ← very small")
-print("   • figure2_volcano_pvalues.npy")
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Light source extraction for Figure 4F
+"""
+
+from pathlib import Path
+import numpy as np
+import json
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+REPO_ROOT  = SCRIPT_DIR.parent
+INPUT_FOLDER = "/home/olivier/Desktop/Marion_project/Paper_figures_marion/Test_Bootstraping_RNA_seq/Export_Data_RNA/"
+OUTPUT_DIR = REPO_ROOT / "Source_light"
+
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+print("Creating light source for Figure 4F...")
+
+# Load all data
+all_xgrid = np.load(INPUT_FOLDER + 'all_xgrid.npy')
+all_yhat = np.load(INPUT_FOLDER + 'all_yhat.npy')
+all_ci = np.load(INPUT_FOLDER + 'all_ci.npy')
+
+kc_xgrid = np.load(INPUT_FOLDER + 'kc_xgrid.npy')
+kc_yhat = np.load(INPUT_FOLDER + 'kc_yhat.npy')
+kc_ci = np.load(INPUT_FOLDER + 'kc_ci.npy')
+
+with open(INPUT_FOLDER + 'plot_metadata.json', 'r') as f:
+    metadata = json.load(f)
+
+# Save everything in ONE clean file
+np.savez(OUTPUT_DIR / "figure4f_correlation_data.npz",
+         all_xgrid=all_xgrid,
+         all_yhat=all_yhat,
+         all_ci=all_ci,
+         kc_xgrid=kc_xgrid,
+         kc_yhat=kc_yhat,
+         kc_ci=kc_ci)
+
+# Save metadata separately (small json)
+with open(OUTPUT_DIR / "figure4f_metadata.json", "w") as f:
+    json.dump(metadata, f, indent=2)
+
+print(f"✅ Light source created:")
+print(f"   {OUTPUT_DIR / 'figure4f_correlation_data.npz'}")
+print(f"   {OUTPUT_DIR / 'figure4f_metadata.json'}")
+
+#%% 
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Create light source for Figure 4a replot script
+"""
+
+from pathlib import Path
+import numpy as np
+import json
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+REPO_ROOT = SCRIPT_DIR.parent
+EXPORT_FOLDER = "/home/olivier/Desktop/Marion_project/Paper_figures_marion/Test_Bootstraping_RNA_seq/Export_Data_ATAC/"
+OUTPUT_DIR = REPO_ROOT / "Source_light"
+
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+print("Creating light source from exported data...")
+
+# Load all files from your export folder
+all_xgrid = np.load(EXPORT_FOLDER + 'all_xgrid.npy')
+all_yhat = np.load(EXPORT_FOLDER + 'all_yhat.npy')
+all_ci = np.load(EXPORT_FOLDER + 'all_ci.npy')
+
+kc_xgrid = np.load(EXPORT_FOLDER + 'kc_xgrid.npy')
+kc_yhat = np.load(EXPORT_FOLDER + 'kc_yhat.npy')
+kc_ci = np.load(EXPORT_FOLDER +'kc_ci.npy')
+
+with open(EXPORT_FOLDER + 'plot_metadata.json', 'r') as f:
+    metadata = json.load(f)
+
+# Save everything in one clean .npz file
+np.savez(OUTPUT_DIR / "figure4a_light_data.npz",
+         all_xgrid=all_xgrid,
+         all_yhat=all_yhat,
+         all_ci=all_ci,
+         kc_xgrid=kc_xgrid,
+         kc_yhat=kc_yhat,
+         kc_ci=kc_ci)
+
+# Also save metadata
+with open(OUTPUT_DIR / "figure4a_metadata.json", "w") as f:
+    json.dump(metadata, f, indent=2)
+
+print(f"✅ Light source created in {OUTPUT_DIR}")
+print("Files:")
+print("   - figure4a_light_data.npz")
+print("   - figure4a_metadata.json")
