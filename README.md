@@ -24,13 +24,13 @@ messina_2026/
 ### 1. Clone the repository
 ```bash
 git clone https://github.com/yourusername/messina_2026.git
-cd messina_2026
-cd Scripts
+cd messina_2026/Scripts
 
-# Example for Figure 1 
+### 2. Example for ploting Figure 1 
+
 python plot_figure1.py
 
-## Citation
+### 3. Citation
 
 Messina et al. (2026) — Enhancer–promoter proximity predicts transcriptional competence but not transcriptional output in the fly mushroom body. 
 *Journal*, 2026.
