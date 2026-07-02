@@ -4,17 +4,19 @@ This repository contains the **light source data** and **reproducible plotting s
 
 ## Repository Structure
 
+```bash
 messina_2026/
-├── Figure_1/                  # Final figures (output)
-├── Figure_2/                  # Final figures (output)
-├── Figure_3/                  # Final figures (output)
-├── Figure_4/                  # Final figures (output)
-├── Figure_supp_1/             # Final figures (output)
-├── Figure_supp_2/             # Final figures (output)
-├── Figure_supp_3/             # Final figures (output)
-├── Figure_supp_4/             # Final figures (output)
+├── Figure_1/                  # Generated output figures
+├── Figure_2/                  # Generated output figures
+├── Figure_3/                  # Generated output figures
+├── Figure_4/                  # Generated output figures
+├── Figure_supp_1/             # Generated output figures
+├── Figure_supp_2/             # Generated output figures
+├── Figure_supp_3/             # Generated output figures
+├── Figure_supp_4/             # Generated output figures
 ├── Scripts/                   # Python plotting scripts
-├── Source_light/              # Lightweight source data
+├── Source_light/              # Lightweight source data (small & reproducible)
+├── Source_data/               # Large raw files (not included in repo)
 └── README.md
 
 ## How to Use
