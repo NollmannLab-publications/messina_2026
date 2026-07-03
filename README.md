@@ -52,7 +52,8 @@ python Figure_S4.py
 
 ### Raw Traces 
 
-Raw chromatin tracing tables are hosted at our https://osf.io/vbpuy/?view_only=9968c35f4d9242b4ad4b329f64ad48cc Open Science Foundation (OSF) Repository
+Raw chromatin tracing tables are hosted at our https://osf.io/vbpuy/?view_only=9968c35f4d9242b4ad4b329f64ad48cc Open Science Foundation (OSF) Repository.
+
 Bardou, M. et al. Chromatin tracing at the rut locus in the Drosophila Melanogaster adult brain. Open Research Europe (2026).
 
 ### Citation
