@@ -1,4 +1,4 @@
-# Messina et al. (2026) — Source Data & Reproducible Plots
+# Messina et al. (2026) — Source Data & Plots
 
 This repository contains **lightweight source data** and **clean plotting scripts** for all figures in **Messina et al. (2026)**.
 
