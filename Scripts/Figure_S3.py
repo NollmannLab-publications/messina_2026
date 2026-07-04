@@ -36,7 +36,7 @@ print("Starting Figure S3 plotting with light source data...\n")
 
 #%% Figure S3a - 4M plot for Anchor 11
 print("Plotting S3a: 4M plot Anchor 11")
-output_dir = REPO_ROOT / "Figure_3_supp" / "Figure_S3a"
+output_dir = REPO_ROOT / "Figures/Figure_3_supp" / "Figure_S3a"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 # Load light data
@@ -64,7 +64,6 @@ plt.legend()
 plt.ylim(0.02, 0.65)
 
 plt.savefig(output_dir / '4M_plot_OK107_notOK107_anchor_11.png', dpi=300, bbox_inches='tight')
-plt.savefig(output_dir / '4M_plot_OK107_notOK107_anchor_11.svg', bbox_inches='tight')
 plt.close()
 
 print("   ✓ S3a done\n")

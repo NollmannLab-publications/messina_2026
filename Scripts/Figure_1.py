@@ -50,7 +50,7 @@ print("Starting Figure 1 plotting with light source data...\n")
 
 #%% Figure 1C - UMAP Rut expression
 print("Plotting 1C: UMAP Rut expression")
-output_dir = REPO_ROOT / "Figure_1" / "Figure_1c"
+output_dir = REPO_ROOT / "Figures/Figure_1" / "Figure_1c"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 df = pd.read_csv(SOURCE_LIGHT / 'figure1c_umap_source.csv')
@@ -79,7 +79,7 @@ print("   ✓ 1C done\n")
 
 #%% Figure 1E - Median PWD Matrix
 print("Plotting 1E: Median PWD Matrix")
-output_dir = REPO_ROOT / "Figure_1" / "Figure_1e"
+output_dir = REPO_ROOT / "Figures/Figure_1" / "Figure_1e"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 Matrix_median = np.load(SOURCE_LIGHT / "figure1e_median_pwd_matrix.npy")
@@ -94,7 +94,7 @@ print("   ✓ 1E done\n")
 
 #%% Figure 1G - Contact Matrices
 print("Plotting 1G: Contact Matrices")
-output_dir = REPO_ROOT / "Figure_1" / "Figure_1g"
+output_dir = REPO_ROOT / "Figures/Figure_1" / "Figure_1g"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 Matrix_Hi_M_contact = np.load(SOURCE_LIGHT / "figure1e_HiM_contact_matrix.npy")
@@ -119,7 +119,7 @@ print("   ✓ 1G done\n")
 
 #%% Figure 1H - Domainogram + Insulation Score
 print("Plotting 1H: Domainogram & Insulation")
-output_dir = REPO_ROOT / "Figure_1" / "Figure_1h"
+output_dir = REPO_ROOT / "Figures/Figure_1" / "Figure_1h"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 Matrix_median = np.load(SOURCE_LIGHT / "figure1e_median_pwd_matrix.npy")
@@ -195,7 +195,7 @@ print("   ✓ 1H done\n")
 
 #%% Figure 1I - Log2 Observed/Expected
 print("Plotting 1I: Log2 O/E")
-output_dir = REPO_ROOT / "Figure_1" / "Figure_1i"
+output_dir = REPO_ROOT / "Figures/Figure_1" / "Figure_1i"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 Matrix_Hi_M_contact = np.load(SOURCE_LIGHT / "figure1f_HiM_contact_matrix.npy")

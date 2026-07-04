@@ -46,7 +46,7 @@ print("Starting Figure 3 plotting with light source data...\n")
 
 #%% Figure 3b - Distance Histogram Grid
 print("Plotting 3b: Distance Histogram Grid")
-output_dir = REPO_ROOT / "Figure_3" / "Figure_3b"
+output_dir = REPO_ROOT / "Figures/Figure_3" / "Figure_3b"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 kde_grid = np.load(SOURCE_LIGHT / "figure3_kde_grid.npy")
@@ -74,7 +74,7 @@ print("   ✓ 3b Histogram grid done\n")
 
 #%% Figure 3b - Median PWD Matrix (OK107)
 print("Plotting 3b: Median PWD Matrix (OK107)")
-output_dir = REPO_ROOT / "Figure_3" / "Figure_3b"
+output_dir = REPO_ROOT / "Figures/Figure_3" / "Figure_3b"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 Matrix_median = np.load(SOURCE_LIGHT / "figure2_OK107_median.npy")

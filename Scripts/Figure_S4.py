@@ -39,7 +39,7 @@ print("Starting Figure S4 plotting with light source data...\n")
 
 #%% Figure S4a - UMAP Rut expression
 print("Plotting S4a: UMAP Rut expression")
-output_dir = REPO_ROOT / "Figure_4_supp" / "Figure_S4a"
+output_dir = REPO_ROOT / "Figures/Figure_4_supp" / "Figure_S4a"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 df = pd.read_csv(SOURCE_LIGHT / 'figure1c_umap_source.csv')
@@ -68,7 +68,7 @@ print("   ✓ S4a done\n")
 
 #%% Figure S4d - 4M plots (AB, ABp, G)
 print("Plotting S4d: 4M plots")
-output_dir = REPO_ROOT / "Figure_4_supp" / "Figure_S4d"
+output_dir = REPO_ROOT / "Figures/Figure_4_supp" / "Figure_S4d"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 data = np.load(SOURCE_LIGHT / "figureS4d_4M_data.npz")
@@ -93,7 +93,6 @@ plt.axvline(x=11, color='k', linestyle='--', label='RutPr')
 plt.legend()
 plt.ylim(0.02, 0.65)
 plt.savefig(output_dir / '4M_plot_AB.png', dpi=300, bbox_inches='tight')
-plt.savefig(output_dir / '4M_plot_AB.svg', bbox_inches='tight')
 plt.close()
 
 # ABp
@@ -107,7 +106,6 @@ plt.axvline(x=11, color='k', linestyle='--', label='RutPr')
 plt.legend()
 plt.ylim(0.02, 0.65)
 plt.savefig(output_dir / '4M_plot_ABp.png', dpi=300, bbox_inches='tight')
-plt.savefig(output_dir / '4M_plot_ABp.svg', bbox_inches='tight')
 plt.close()
 
 # G
@@ -128,7 +126,7 @@ print("   ✓ S4d 4M plots done\n")
 
 #%% Figure S4e - BC10 log2 contact vs log2 ATAC difference
 print("Plotting S4e: BC10 log2 difference")
-output_dir = REPO_ROOT / "Figure_4_supp" / "Figure_S4e"
+output_dir = REPO_ROOT / "Figures/Figure_4_supp" / "Figure_S4e"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 data = np.load(SOURCE_LIGHT / "figureS4e_log2_diff_data.npz", allow_pickle=True)
@@ -188,7 +186,6 @@ ax.legend(handles=handles, title='Cell type', frameon=False)
 
 plt.tight_layout()
 plt.savefig(output_dir / 'BC10_log2_contact_vs_log2_ATAC_diff_vs_NonKCs_annotated.png', dpi=300, bbox_inches='tight')
-plt.savefig(output_dir / 'BC10_log2_contact_vs_log2_ATAC_diff_vs_NonKCs_annotated.svg', bbox_inches='tight')
 plt.close()
 print("   ✓ S4e log2 difference done\n")
 

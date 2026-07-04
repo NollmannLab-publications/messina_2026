@@ -38,7 +38,7 @@ print("Starting Figure S1 plotting with light source data...\n")
 
 #%% Figure S1a - Violin Plot (Rut ratio KC vs not KC)
 print("Plotting S1a: Violin Plot")
-output_dir = REPO_ROOT / "Figure_1_supp" / "Figure_S1a"
+output_dir = REPO_ROOT / "Figures/Figure_1_supp" / "Figure_S1a"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 data = np.load(SOURCE_LIGHT / "figureS1a_data.npz")
@@ -65,13 +65,13 @@ ax.set_xlabel('Cell Type')
 ax.set_ylabel('Rut Expression')
 ax.set_ylim(-0.1, 3)
 
-plt.savefig(output_dir / 'Expression_KCs_notKC_KCs_no_outliers.svg', dpi=300, bbox_inches='tight')
+plt.savefig(output_dir / 'Expression_KCs_notKC_KCs_no_outliers.png', dpi=300, bbox_inches='tight')
 plt.close()
 print("   ✓ S1a done\n")
 
 #%% Figure S1e - 10 Replicates Median PWD
 print("Plotting S1e: 10 Replicates Median PWD")
-output_dir = REPO_ROOT / "Figure_1_supp" / "Figure_S1b"
+output_dir = REPO_ROOT / "Figures/Figure_1_supp" / "Figure_S1b"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 Colormap_distance = 'RdGy'
@@ -89,7 +89,7 @@ print("   ✓ S1b done\n")
 
 #%% Figure S1d - Bootstrapping
 print("Plotting S1c: Bootstrapping")
-output_dir = REPO_ROOT / "Figure_1_supp" / "Figure_S1c"
+output_dir = REPO_ROOT / "Figures/Figure_1_supp" / "Figure_S1c"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 Matrix_boot = np.load(SOURCE_LIGHT / "S1c_bootstrapping_HiM.npy", allow_pickle=True)
@@ -112,7 +112,7 @@ print("   ✓ S1c done\n")
 
 #%% Figure S1B - N-matrix + Histogram Grid
 print("Plotting S1d: N-matrix + Histogram Grid")
-output_dir = REPO_ROOT / "Figure_1_supp" / "Figure_S1b"
+output_dir = REPO_ROOT / "Figures/Figure_1_supp" / "Figure_S1d"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 normalized_matrix = np.load(SOURCE_LIGHT / "figureS1_N_matrix.npy")

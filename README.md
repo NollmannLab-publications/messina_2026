@@ -6,18 +6,9 @@ This repository contains **lightweight source data** and **clean plotting script
 
 ```bash
 messina_2026/
-├── Figure_1/                  # Generated Figure 1 panels
-├── Figure_2/                  # Generated Figure 2 panels
-├── Figure_3/                  # Generated Figure 3 panels
-├── Figure_4/                  # Generated Figure 4 panels
-├── Figure_1_supp/             # Supplementary Figure S1
-├── Figure_2_supp/             # Supplementary Figure S2
-├── Figure_3_supp/             # Supplementary Figure S3
-├── Figure_4_supp/             # Supplementary Figure S4
+├── Figures/                  # Generated Figure panels
 ├── Scripts/                   # Python plotting scripts
 ├── Source_light/              # Lightweight source data (CSV + .npy)
-├── cleanup_figures.py         # Remove all generated figures
-├── run_all_figures.py         # Run all plotting scripts
 └── README.md
 ```
 

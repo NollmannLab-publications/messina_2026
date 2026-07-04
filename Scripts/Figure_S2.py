@@ -38,7 +38,7 @@ print("Starting Figure S2 plotting with light source data...\n")
 
 #%% Figure S2a - Power-law Fits (Median & Contact)
 print("Plotting S2a: Power-law Fits")
-output_dir = REPO_ROOT / "Figure_2_supp" / "Figure_S2a"
+output_dir = REPO_ROOT / "Figures/Figure_2_supp" / "Figure_S2a"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 data = np.load(SOURCE_LIGHT / "figure1_powerlaw_fits.npz")
@@ -57,11 +57,10 @@ plt.title("Median Distance vs Genomic Distance with Power-law Fit")
 plt.legend()
 plt.tight_layout()
 plt.savefig(output_dir / 'Median_Distance_vs_Genomic_Distance_Power_Law_Fit.png', dpi=300)
-plt.savefig(output_dir / 'Median_Distance_vs_Genomic_Distance_Power_Law_Fit.svg')
 plt.close()
 
 # Contact vs Genomic Distance
-output_dir = REPO_ROOT / "Figure_2_supp" / "Figure_S2c"
+output_dir = REPO_ROOT / "Figures/Figure_2_supp" / "Figure_S2c"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 plt.figure(figsize=(8, 6))
@@ -77,13 +76,12 @@ plt.title("Contact vs Genomic Distance with Power-law Fit")
 plt.legend()
 plt.tight_layout()
 plt.savefig(output_dir / 'Contact_vs_Genomic_Distance_Power_Law_Fit.png', dpi=300)
-plt.savefig(output_dir / 'Contact_vs_Genomic_Distance_Power_Law_Fit.svg')
 plt.close()
 print("   ✓ S2a Power-law fits done\n")
 
 #%% Figure S2b - HiC vs HiM Correlation
 print("Plotting S2b: HiC vs HiM Correlation")
-output_dir = REPO_ROOT / "Figure_2_supp" / "Figure_S2b"
+output_dir = REPO_ROOT / "Figures/Figure_2_supp" / "Figure_S2b"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 data = np.load(SOURCE_LIGHT / "figureS2b_correlation.npz")

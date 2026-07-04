@@ -38,7 +38,7 @@ print("Starting Figure 4 plotting with light source data...\n")
 
 #%% Figure 4a - Violin Plot
 print("Plotting 4a: Violin Plot")
-output_dir = REPO_ROOT / "Figure_4" / "Figure_4a"
+output_dir = REPO_ROOT / "Figures/Figure_4" / "Figure_4a"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 data = np.load(SOURCE_LIGHT / "figure4a_violin_data.npz")
@@ -69,7 +69,7 @@ print("   ✓ 4a done\n")
 
 #%% Figure 4c - KC subtypes Contact Maps
 print("Plotting 4c: KC subtypes Contact Maps")
-output_dir = REPO_ROOT / "Figure_4" / "Figure_4c"
+output_dir = REPO_ROOT / "Figures/Figure_4" / "Figure_4c"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 data = np.load(SOURCE_LIGHT / "figure4_kc_contact_maps.npz")
@@ -86,7 +86,7 @@ print("   ✓ 4c done\n")
 
 #%% Figure 4e - Distance vs ATAC-seq
 print("Plotting 4e: Distance vs ATAC-seq")
-output_dir = REPO_ROOT / "Figure_4" / "Figure_4e"
+output_dir = REPO_ROOT / "Figures/Figure_4" / "Figure_4e"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 data = np.load(SOURCE_LIGHT / "figure4e_light_data.npz")
@@ -156,11 +156,12 @@ plt.tight_layout()
 plt.savefig(output_dir / 'Figure_4a_final.png', dpi=400, bbox_inches='tight')
 plt.savefig(output_dir / 'Figure_4a_final.svg', bbox_inches='tight')
 plt.show()
+plt.close()
 print("   ✓ 4e done\n")
 
 #%% Figure 4f - Correlation plot
 print("Plotting 4f: Correlation plot")
-output_dir = REPO_ROOT / "Figure_4" / "Figure_4f"
+output_dir = REPO_ROOT / "Figures/Figure_4" / "Figure_4f"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 data = np.load(SOURCE_LIGHT / "figure4f_correlation_data.npz")
@@ -234,9 +235,9 @@ leg2 = ax.legend(handles=handles_rut, loc='upper right', fontsize=14, bbox_to_an
 ax.add_artist(leg1)
 
 plt.tight_layout()
-plt.savefig(output_dir / 'Figure_4F_final.png', dpi=400, bbox_inches='tight')
-plt.savefig(output_dir / 'Figure_4F_final.svg', bbox_inches='tight')
+plt.savefig(output_dir / 'Figure_4F_final.png', dpi=300, bbox_inches='tight')
 plt.show()
+plt.close()
 print("   ✓ 4f done\n")
 
 print("🎉 All Figure 4 panels completed!")

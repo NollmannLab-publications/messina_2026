@@ -6,7 +6,7 @@
 Created on Aug, 2026
 
 ------------------------------------------------------------------------------------------------------------------------
-This code is compiling all the pannels for Figure 1 Messina et al. 2026
+This code is compiling all the pannels for Figure 2 Messina et al. 2026
 ------------------------------------------------------------------------------------------------------------------------
 
                    ############################
@@ -52,7 +52,7 @@ Matrix_not_OK107_median = np.load(SOURCE_LIGHT / "figure2_notOK107_median.npy")
 
 #%% Figure 2c - Contact maps
 print("Plotting 2c: Contact maps")
-output_dir = REPO_ROOT / "Figure_2" / "Figure_2c"
+output_dir = REPO_ROOT / "Figures/Figure_2" / "Figure_2c"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 # OK107
@@ -74,7 +74,7 @@ print("   ✓ 2c done\n")
 
 #%% Figure 2d - Differential PWD (log2 ratio)
 print("Plotting 2d: Differential PWD")
-output_dir = REPO_ROOT / "Figure_2" / "Figure_2d"
+output_dir = REPO_ROOT / "Figures/Figure_2" / "Figure_2d"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 np.fill_diagonal(Matrix_OK107_median, np.nan)
@@ -92,7 +92,7 @@ print("   ✓ 2d done\n")
 
 #%% Figure 2e - Volcano plot
 print("Plotting 2e: Volcano plot")
-output_dir = REPO_ROOT / "Figure_2" / "Figure_2e"
+output_dir = REPO_ROOT / "Figures/Figure_2" / "Figure_2e"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 differential_matrix = np.load(SOURCE_LIGHT / "figure2_volcano_differential.npy")
@@ -123,7 +123,6 @@ plt.title('Volcano plot OK107 vs not_OK107')
 plt.xlabel('Log2 Fold Change (PWD)')
 plt.ylabel('-log10(p-value)')
 plt.savefig(output_dir / 'Volcano_plot_OK107_notOK107_PWD.png', dpi=300, bbox_inches='tight')
-plt.savefig(output_dir / 'Volcano_plot_OK107_notOK107_PWD.svg')
 plt.close()
 print("   ✓ 2e done\n")
 
