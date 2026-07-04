@@ -53,5 +53,4 @@ Messina et al. (2026) — Enhancer–promoter proximity predicts transcriptional
 ### Notes
 
 - All scripts use relative paths and light source data only.
-- Large raw files are not included in the repository.
 - Use cleanup_figures.py to remove all generated plots.
